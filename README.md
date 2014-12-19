@@ -1,4 +1,12 @@
-apcsfinal_fall
+AP CS Final Project - Fall
 ==============
 
-GUI with machine learning
+Authors
+==============
+Edward Fan & Michael Jin
+
+This GUI with machine learning
+
+Changelog
+==============
+
