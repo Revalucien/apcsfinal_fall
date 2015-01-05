@@ -10,8 +10,9 @@ public class Plot2D{
     public Plot2D(){
 	fr = new Frame("Graph");
 	fr.setSize(600,600);
-	fr.setLocation(100,100);
+	fr.setLocation(740,100);
 	fr.setUndecorated(false);
 	fr.setVisible(true);
+	
     }
 }
