@@ -28,14 +28,14 @@ public class MWindow {
 	        public void windowDeactivated(WindowEvent e) {}
 	        public void windowClosed(WindowEvent e) {}
 		});
-		this.computeGradientDescent();
+		this.computeGradientDescent(1650, 3);
 	}
 
 	public Frame getFrame () {
 		return this.wframe;
 	}
 
-	public void computeGradientDescent () {
+	public void computeGradientDescent (int p, int q) {
 		ArrayList housing = new ArrayList<Double[]> ();
 		ArrayList price = new ArrayList<Double> ();
 		ArrayList housing_alt = new ArrayList<Double[]> ();		//prepare training examples for matrix multiplication
@@ -157,7 +157,8 @@ public class MWindow {
 		System.out.println("theta 0: " + theta[0]);
 		System.out.println("theta 1: " + theta[1]);
 		System.out.println("theta 2: " + theta[2]);
-		double new_price = (1 * theta[0]) + (((1650 - mu[0])/sigma[0]) * theta[1]) + (((3 - mu[1]) / sigma[1]) * theta[2]);
+		//double new_price = (1 * theta[0]) + (((1650 - mu[0])/sigma[0]) * theta[1]) + (((3 - mu[1]) / sigma[1]) * theta[2]);
+		double new_price = (1 * theta[0]) + (((p - mu[0])/sigma[0]) * theta[1]) + (((q - mu[1]) / sigma[1]) * theta[2]);
 		System.out.println("Price of a 1650 sqft house with 3 bedrooms is $" + new_price);
 	}
 }
