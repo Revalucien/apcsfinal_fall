@@ -2,17 +2,23 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import java.awt.image.*;
 
 public class MWindow {
 	private Frame wframe;
 	private Window fwindow;
 	private GraphicsConfiguration gc;
+	private BufferedImage buff;
+	private Rectangle bounds;
 
 	public MWindow () {
 		this.wframe = new Frame("ModelSim");
  		this.fwindow = new Window(this.wframe);
  		this.gc = this.fwindow.getGraphicsConfiguration();
+		this.buff = this.gc.createCompatibleImage(640,480);
  		this.wframe.setSize(640,480);
+		this.bounds = this.wframe.getMaximizedBounds();
+		System.out.println("height: " + this.bounds.height + " width: " + this.bounds.width);
  		this.wframe.setLocation(100,100);
  		this.wframe.setUndecorated(false);
  		this.wframe.setVisible(true);
@@ -35,7 +41,7 @@ public class MWindow {
 		return this.wframe;
 	}
 
-	public void computeGradientDescent (int p, int q) {
+	public void computeGradientDescent (int p, int q) {	//accepts room size and number of bedrooms
 		ArrayList housing = new ArrayList<Double[]> ();
 		ArrayList price = new ArrayList<Double> ();
 		ArrayList housing_alt = new ArrayList<Double[]> ();		//prepare training examples for matrix multiplication
