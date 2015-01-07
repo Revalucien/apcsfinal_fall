@@ -10,6 +10,7 @@ public class MWindow {
 	private GraphicsConfiguration gc;
 	private BufferedImage buff;
 	private Rectangle bounds;
+	private MPanel pan;
 
 	public MWindow () {
 		this.wframe = new Frame("ModelSim");
@@ -35,6 +36,8 @@ public class MWindow {
 	        public void windowClosed(WindowEvent e) {}
 		});
 		this.computeGradientDescent(1650, 3);
+		this.pan = new MPanel();
+		this.wframe.add(this.pan);
 	}
 
 	public Frame getFrame () {
