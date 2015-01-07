@@ -1,7 +1,0 @@
-import java.awt.*;
-
-public class Plot2DDraw implements Panel {
-	public Plot2Draw () {
-
-	}
-}
