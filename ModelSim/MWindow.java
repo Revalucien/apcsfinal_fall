@@ -19,7 +19,7 @@ public class MWindow {
 		this.buff = this.gc.createCompatibleImage(640,480);
  		this.wframe.setSize(640,480);
 		this.bounds = this.wframe.getMaximizedBounds();
-		System.out.println("height: " + this.bounds.height + " width: " + this.bounds.width);
+		//System.out.println("height: " + this.bounds.height + " width: " + this.bounds.width);
  		this.wframe.setLocation(100,100);
  		this.wframe.setUndecorated(false);
  		this.wframe.setVisible(true);

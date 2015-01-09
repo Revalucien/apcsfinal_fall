@@ -1,18 +1,34 @@
 import java.awt.*;
 import java.awt.image.*;
 
-public class MPanel {
+public class MPanel extends Panel {
 	private BufferedImage can;
+	private Graphics gfx;
+	/*private Thread t;
+
+	public void start () { if (t == null) { t = new Thread(this); t.start(); } }
+	public void stop () { if (t != null) {t.stop(); t = null;}}
+	public void run () {
+		try {
+			while (true) {
+				this.paint(this.gfx);
+				this.t.sleep(20);
+			}
+		}
+		catch (Exception e) {}
+	}*/
 
 	public MPanel () {
-		this.can = new BufferedImage(640,480, BufferedImage.TYPE_INT_ARGB_PRE);
+		this.can = (new BufferedImage(640,480, BufferedImage.TYPE_INT_ARGB_PRE));
 		this.gfx = this.can.createGraphics();
 	}
 
-	@Override
 	public void paint (Graphics g) {
-		this.gfx.setColor(Color.white);
-		this.gfx.fillRect(0,0,640,480);
-		g.drawImage(this.gfx,0,0,0,0);
+		super.paint(g);
+		g.setColor(Color.black);
+		g.fillRect(320,0,320,480);
+		g.setColor(Color.white);
+		g.fillRect(0,0,640,480);
+		g.drawImage((Image)this.can,0,0,this);
 	}
 }
