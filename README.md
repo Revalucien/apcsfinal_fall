@@ -9,4 +9,5 @@ Edward Fan & Michael Jin
 Changelog
 ==============
 -added linear regression implementation
+
 -added window frame constructor
