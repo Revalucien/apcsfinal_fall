@@ -15,10 +15,18 @@ public class Plot2D{
 	fr.setLocation(740,100);
 	fr.setUndecorated(false);
 	fr.setVisible(true);
-	gr = fr.getGraphics();
-	gr2d = (Graphics2D) gr;
-	gr.setColor(Color.BLACK);
-	gr.drawLine(20,20,30,30);
+	fr.addWindowListener(new WindowListener () {
+		public void windowClosing(WindowEvent e) {
+		    System.exit(0);
+		}
+			
+		public void windowOpened(WindowEvent e) {}
+	        public void windowActivated(WindowEvent e) {}
+	        public void windowIconified(WindowEvent e) {}
+	        public void windowDeiconified(WindowEvent e) {}
+	        public void windowDeactivated(WindowEvent e) {}
+	        public void windowClosed(WindowEvent e) {}
+	    });
 	
 
     }
