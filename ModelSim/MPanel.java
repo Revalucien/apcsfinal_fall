@@ -1,14 +1,39 @@
+/* Qijia (Michael) Jin
+	extend the default java Panel object
+*/
+
 import java.awt.*;
+import java.awt.geom.*;
 import java.awt.image.*;
 import java.text.*;
 import java.util.*;
 
-public class MPanel extends Panel {
+public class MPanel extends Panel implements Runnable{
 	private BufferedImage can;
 	private Graphics gfx;
-	/*private Thread t;
+	private Graphics2D gfx2D;
+	private Thread t;
+	private Boolean isUpdating;
+	private Frame ctx;
+	private Rectangle bounds;
+	private Font font;
+	private String xaxis;
+	private String yaxis;
+	private AffineTransform rotate;
 
-	public void start () { if (t == null) { t = new Thread(this); t.start(); } }
+	public void start () {
+		if (t == null) {
+			t = new Thread(this);
+			t.start(); 
+			while (this.isUpdating) {
+				super.repaint();
+				try {
+					Thread.sleep(50);
+				}
+				catch (InterruptedException ie) {}
+			}
+		} 
+	}
 	public void stop () { if (t != null) {t.stop(); t = null;}}
 	public void run () {
 		try {
@@ -18,23 +43,71 @@ public class MPanel extends Panel {
 			}
 		}
 		catch (Exception e) {}
-	}*/
+	}
 
-	public MPanel () {
-		this.can = (new BufferedImage(640,480, BufferedImage.TYPE_INT_ARGB_PRE));
+	public MPanel (Frame window) {
+		this.isUpdating = true;
+		this.font = new Font("Arial Monospaced", Font.PLAIN, 20);
+		this.ctx = window;
+		this.xaxis = new String("Size (square feet)");
+		this.yaxis = new String("Number of Bedrooms");
+		this.bounds = this.ctx.getBounds();
+		super.setSize(this.bounds.width,this.bounds.height);
+		this.can = (new BufferedImage(this.bounds.width,this.bounds.height, BufferedImage.TYPE_INT_ARGB_PRE));
 		this.gfx = this.can.createGraphics();
+		this.gfx2D = (Graphics2D)this.gfx;
+		this.gfx2D.setFont(this.font);
+		this.cleanGFX();
+		this.drawAxis();
+		super.validate();
 	}
 
 	@Override
 	public void paint (Graphics g) {
-		System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
-		super.paint(g);
-		//g.setColor(Color.white);
-		//g.fillRect(0,0,640,480);
-		g.setColor(Color.black);
-		g.fillRect(0,0,320,480);
-		//g.setColor(Color.white);
-		g.drawImage((Image)this.can,0,0,this);
-		super.update(g);
+		try {
+				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
+				super.paint(g);
+				g.drawImage((Image)this.can,0,0,this);
+				t.sleep(50);							//account for consecutive updates
+		}
+		catch (InterruptedException ie) {}
+	}
+
+	public void drawAxis () {
+		this.gfx.setColor(Color.black);
+		this.bounds = this.ctx.getBounds();
+		System.out.println("Top Inset: " + this.ctx.getInsets().top);
+		System.out.println("Left Inset: " + this.ctx.getInsets().left);
+		System.out.println("right Inset: " + this.ctx.getInsets().right);
+		System.out.println("bottom Inset: " + this.ctx.getInsets().bottom);
+		this.gfx2D.translate(0, (this.bounds.height - this.ctx.getInsets().top));
+		this.gfx2D.drawString(this.xaxis, (this.bounds.width/2) - (6 * (this.xaxis.length() - 0)), -15);
+		this.rotate = new AffineTransform();
+		this.rotate.rotate(-Math.PI * .5);
+		this.gfx2D.transform(this.rotate);
+		this.gfx2D.drawString(this.yaxis, (this.bounds.height/2) - (7 * (this.yaxis.length() - 0)), 30);
+		this.rotate.rotate(Math.PI);
+		this.gfx2D.transform(this.rotate);
+		this.gfx2D.scale(1,-1);
+		this.gfx2D.setColor(Color.black);
+		this.gfx.drawLine(75, 75, 75, 680);
+		this.gfx.drawLine(75, 75, 1260, 75);
+		this.gfx2D.translate(-75,-75);
+		this.gfx2D.translate(75,75);
+		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
+		this.gfx2D.scale(1,-1);
+	}
+
+	public void cleanGFX() {
+		this.gfx.setColor(Color.white);
+		this.gfx.fillRect(0,0,this.bounds.width,this.bounds.height);
+		this.gfx.setColor(Color.black);
+		((Graphics2D)(this.gfx)).setStroke(new BasicStroke(2));
+		super.repaint();
+	}
+
+	public void drawPoint(int x, int y) {
+		this.gfx.drawLine(x,y,x,y);
+		super.repaint();
 	}
 }

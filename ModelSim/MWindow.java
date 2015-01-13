@@ -16,13 +16,14 @@ public class MWindow {
 		this.wframe = new Frame("ModelSim");
  		this.fwindow = new Window(this.wframe);
  		this.gc = this.fwindow.getGraphicsConfiguration();
-		this.buff = this.gc.createCompatibleImage(640,480);
- 		this.wframe.setSize(640,480);
+		this.buff = this.gc.createCompatibleImage(1280,720);
+		this.wframe.setResizable(false);
+ 		this.wframe.setSize(1280,720);
 		this.bounds = this.wframe.getMaximizedBounds();
-		//System.out.println("height: " + this.bounds.height + " width: " + this.bounds.width);
+		System.out.println("height: " + this.wframe.getBounds().height + " width: " + this.wframe.getBounds().width);
  		this.wframe.setLocation(100,100);
  		this.wframe.setUndecorated(false);
- 		this.wframe.setVisible(true);
+		this.wframe.setLayout(null);
  		this.wframe.addWindowListener(new WindowListener () {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -36,8 +37,10 @@ public class MWindow {
 	        public void windowClosed(WindowEvent e) {}
 		});
 		this.computeGradientDescent(1650, 3);
-		this.pan = new MPanel();
+		(new Thread(this.pan = new MPanel(this.wframe))).start();
 		this.wframe.add(this.pan);
+		this.wframe.validate();
+ 		this.wframe.setVisible(true);
 	}
 
 	public Frame getFrame () {
