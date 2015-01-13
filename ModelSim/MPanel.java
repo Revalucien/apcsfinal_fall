@@ -37,9 +37,8 @@ public class MPanel extends Panel implements Runnable{
 	public void stop () { if (t != null) {t.stop(); t = null;}}
 	public void run () {
 		try {
-			while (true) {
-				this.paint(this.gfx);
-				this.t.sleep(20);
+			while (this.isUpdating) {
+				this.t.sleep(10);
 			}
 		}
 		catch (Exception e) {}
@@ -67,8 +66,8 @@ public class MPanel extends Panel implements Runnable{
 		try {
 				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
 				super.paint(g);
+				this.t.sleep(50);
 				g.drawImage((Image)this.can,0,0,this);
-				t.sleep(50);							//account for consecutive updates
 		}
 		catch (InterruptedException ie) {}
 	}
