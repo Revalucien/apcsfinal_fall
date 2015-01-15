@@ -39,8 +39,8 @@ public class MPanel extends Panel implements Runnable{
 	public void run () {
 		try {
 			while (this.isUpdating) {
-				super.repaint();
-				this.t.sleep(20);
+				//super.repaint();
+				this.t.sleep(50);
 			}
 		}
 		catch (InterruptedException ie) {}
@@ -68,18 +68,18 @@ public class MPanel extends Panel implements Runnable{
 		this.cleanGFX();
 		this.drawAxis();
 		this.drawData();
+		super.repaint();
 		super.validate();
 	}
 
 	@Override
 	public void paint (Graphics g) {
-		try {
+		//try {
 				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
 				super.paint(g);
 				g.drawImage((Image)this.can,0,0,this);
-				t.sleep(50);							//account for consecutive updates
-		}
-		catch (InterruptedException ie) {}
+		//}
+		//catch (InterruptedException ie) {}
 	}
 
 	public void drawAxis () {
@@ -159,11 +159,9 @@ public class MPanel extends Panel implements Runnable{
 		this.gfx.fillRect(0,0,this.bounds.width,this.bounds.height);
 		this.gfx.setColor(Color.black);
 		this.gfx2D.setStroke(new BasicStroke(2));
-		super.repaint();
 	}
 
 	public void drawPoint(int x, int y) {
 		this.gfx2D.drawLine(x,y,x,y);
-		super.repaint();
 	}
 }
