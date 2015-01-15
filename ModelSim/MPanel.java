@@ -32,25 +32,18 @@ public class MPanel extends Panel implements Runnable{
 	public void start () {
 		if (t == null) {
 			t = new Thread(this);
-			t.start(); 
-			while (this.isUpdating) {
-				super.repaint();
-				try {
-					Thread.sleep(50);
-				}
-				catch (InterruptedException ie) {}
-			}
+			t.start();
 		} 
 	}
 	public void stop () { if (t != null) {t.stop(); t = null;}}
 	public void run () {
 		try {
-			while (true) {
-				this.paint(this.gfx);
+			while (this.isUpdating) {
+				super.repaint();
 				this.t.sleep(20);
 			}
 		}
-		catch (Exception e) {}
+		catch (InterruptedException ie) {}
 	}
 
 	public MPanel (Frame window, ArrayList housing, ArrayList price) {
