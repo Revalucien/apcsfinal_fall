@@ -39,7 +39,7 @@ public class MPanel extends Panel implements Runnable{
 	public void run () {
 		try {
 			while (this.isUpdating) {
-				//super.repaint();
+				super.repaint();
 				this.t.sleep(50);
 			}
 		}
@@ -73,11 +73,19 @@ public class MPanel extends Panel implements Runnable{
 	}
 
 	@Override
+	public void update (Graphics g) {
+		this.cleanGFX();
+		this.drawAxis();
+		this.drawData();
+		this.paint(g);
+	}
+
+	@Override
 	public void paint (Graphics g) {
 		//try {
 				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
 				super.paint(g);
-				g.drawImage((Image)this.can,0,0,this);
+				g.drawImage(this.can,0,0,this);
 		//}
 		//catch (InterruptedException ie) {}
 	}
