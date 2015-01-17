@@ -28,6 +28,9 @@ public class MPanel extends Panel implements Runnable{
 	private Color FIVE_BDRM;
 	private ArrayList<Double[]> l0;
 	private ArrayList<Double> l1;
+	private MWindow win;
+	private Point KEY;
+	private int DRAWABLE_HEIGHT;
 
 	public void start () {
 		if (t == null) {
@@ -46,16 +49,18 @@ public class MPanel extends Panel implements Runnable{
 		catch (InterruptedException ie) {}
 	}
 
-	public MPanel (Frame window, ArrayList housing, ArrayList price) {
+	public MPanel (Frame window, ArrayList housing, ArrayList price, MWindow win) {
 		this.isUpdating = true;
 		this.l0 = housing;
 		this.l1 = price;
+		this.win = win;
 		this.font = new Font("Arial Monospaced", Font.PLAIN, 20);
-		this.ONE_BDRM = new Color(255,0,0);
-		this.TWO_BDRM = new Color(255,0,135);
+		this.FIVE_BDRM = new Color(255,0,0);
+		this.FOUR_BDRM = new Color(255,0,135);
 		this.THREE_BDRM = new Color(255,0,255);
-		this.FOUR_BDRM = new Color(255,135,255);
-		this.FIVE_BDRM = new Color(255,135,135);
+		this.TWO_BDRM = new Color(255,135,255);
+		this.ONE_BDRM = new Color(255,135,135);
+		this.KEY = new Point(960,150);
 		this.ctx = window;
 		this.xaxis = new String("Size (square feet)");
 		this.yaxis = new String("Price (in thousands)");
@@ -66,18 +71,18 @@ public class MPanel extends Panel implements Runnable{
 		this.gfx2D = (Graphics2D)this.gfx;
 		this.gfx2D.setFont(this.font);
 		this.cleanGFX();
-		this.drawAxis();
-		this.drawData();
-		super.repaint();
 		super.validate();
 	}
 
 	@Override
 	public void update (Graphics g) {
-		this.cleanGFX();
-		this.drawAxis();
-		this.drawData();
-		this.paint(g);
+		if (this.ctx.getInsets().top != 0) {
+			this.cleanGFX();
+			this.drawAxis();
+			this.drawBD();
+			this.drawData();
+			this.paint(g);
+		}
 	}
 
 	@Override
@@ -85,7 +90,7 @@ public class MPanel extends Panel implements Runnable{
 		//try {
 				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
 				super.paint(g);
-				g.drawImage(this.can,0,0,this);
+				g.drawImage(this.can,0,this.ctx.getInsets().top,this);
 		//}
 		//catch (InterruptedException ie) {}
 	}
@@ -113,6 +118,24 @@ public class MPanel extends Panel implements Runnable{
 		this.Y_LEN = 680 - 75;
 		this.gfx.drawLine(75, 75, 1220, 75);
 		this.X_LEN = 1220 - 75;
+		this.gfx2D.setColor(this.ONE_BDRM);
+		this.gfx2D.fillRect((int)this.KEY.getX(),(int)this.KEY.getY(),20,20);
+		this.gfx2D.setColor(this.TWO_BDRM);
+		this.gfx2D.fillRect((int)this.KEY.getX(),(int)this.KEY.getY() + 20,20,20);
+		this.gfx2D.setColor(this.THREE_BDRM);
+		this.gfx2D.fillRect((int)this.KEY.getX(),(int)this.KEY.getY() + 40,20,20);
+		this.gfx2D.setColor(this.FOUR_BDRM);
+		this.gfx2D.fillRect((int)this.KEY.getX(),(int)this.KEY.getY() + 60,20,20);
+		this.gfx2D.setColor(this.FIVE_BDRM);
+		this.gfx2D.fillRect((int)this.KEY.getX(),(int)this.KEY.getY() + 80,20,20);
+		this.gfx2D.setColor(Color.black);
+		this.gfx2D.scale(1,-1);
+		this.gfx2D.drawString("1 Bedroom", (int)this.KEY.getX() + 30, -(int)this.KEY.getY() - 3);
+		this.gfx2D.drawString("2 Bedrooms", (int)this.KEY.getX() + 30, -(int)this.KEY.getY() - 23);
+		this.gfx2D.drawString("3 Bedrooms", (int)this.KEY.getX() + 30, -(int)this.KEY.getY() - 43);
+		this.gfx2D.drawString("4 Bedrooms", (int)this.KEY.getX() + 30, -(int)this.KEY.getY() - 63);
+		this.gfx2D.drawString("5 Bedrooms", (int)this.KEY.getX() + 30, -(int)this.KEY.getY() - 83);
+		this.gfx2D.scale(1,-1);
 		this.gfx2D.translate(75,75);
 		for (int i = 0; i < 7; i++) {
 			this.gfx2D.drawLine(5,((this.Y_LEN/7)*(1 + i)), 0,((this.Y_LEN/7)*(1 + i)));
@@ -126,6 +149,30 @@ public class MPanel extends Panel implements Runnable{
 			this.gfx2D.drawString((new Integer((i + 1) * 500)).toString(), ((this.X_LEN/10)*(1 + i)) - 24, 30);
 			this.gfx2D.scale(1,-1);
 		}
+		this.gfx2D.translate(-75,-75);
+		this.gfx2D.scale(1,-1);
+		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
+	}
+
+	public void drawBD () {		//plot points based on price and number of square feet
+		this.bounds = this.ctx.getBounds();
+		this.gfx2D.translate(0, (this.bounds.height - this.ctx.getInsets().top));
+		this.gfx2D.scale(1,-1);
+		this.gfx2D.translate(75,75);
+		for (int i = 0; i < 5000; i++) {
+			this.gfx2D.setStroke(new BasicStroke(3));
+			this.gfx2D.setColor(this.ONE_BDRM);
+			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 1)))/100000)));
+			this.gfx2D.setColor(this.TWO_BDRM);
+			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 2)))/100000)));
+			this.gfx2D.setColor(this.THREE_BDRM);
+			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 3)))/100000)));
+			this.gfx2D.setColor(this.FOUR_BDRM);
+			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 4)))/100000)));
+			this.gfx2D.setColor(this.FIVE_BDRM);
+			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 5)))/100000)));
+		}
+		this.gfx2D.setColor(Color.black);
 		this.gfx2D.translate(-75,-75);
 		this.gfx2D.scale(1,-1);
 		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
@@ -158,8 +205,8 @@ public class MPanel extends Panel implements Runnable{
 		}
 		this.gfx2D.setColor(Color.black);
 		this.gfx2D.translate(-75,-75);
-		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
 		this.gfx2D.scale(1,-1);
+		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
 	}
 
 	public void cleanGFX() {

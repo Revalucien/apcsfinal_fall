@@ -15,6 +15,9 @@ public class MWindow {
 	private ArrayList<Double[]> housing_alt;		//prepare training examples for matrix multiplication
 	private ArrayList<Double[]> housing_origin;		//prepare training examples for matrix multiplication
 	private ArrayList<Double> price;
+	private double[] mu = new double [] {0, 0};
+	private double[] sigma = new double [] {0, 0};
+	private double[] theta = new double [] {0, 0, 0};
 
 	public MWindow () {
 		this.housing = new ArrayList<Double[]> ();
@@ -45,10 +48,14 @@ public class MWindow {
 	        public void windowClosed(WindowEvent e) {}
 		});
 		this.computeGradientDescent(1650, 3);
-		(new Thread(this.pan = new MPanel(this.wframe, this.housing_origin, this.price))).start();
+		(new Thread(this.pan = new MPanel(this.wframe, this.housing_origin, this.price, this))).start();
 		this.wframe.add(this.pan);
 		this.wframe.validate();
  		this.wframe.setVisible(true);
+	}
+
+	public double computePrice (double sqft, int bdrm) {
+		return (1 * theta[0]) + (((sqft - mu[0])/sigma[0]) * theta[1]) + (((bdrm - mu[1]) / sigma[1]) * theta[2]);
 	}
 
 	public Frame getFrame () {
@@ -59,9 +66,9 @@ public class MWindow {
 		ArrayList housing_alt = new ArrayList<Double[]> ();		//prepare training examples for matrix multiplication
 		ArrayList costs = new ArrayList<Double> ();
 		int m = 0;				//number of training examples
-		double[] mu = new double [] {0, 0};
-		double[] sigma = new double [] {0, 0};
-		double[] theta = new double [] {0, 0, 0};
+		//double[] mu = new double [] {0, 0};
+		//double[] sigma = new double [] {0, 0};
+		//double[] theta = new double [] {0, 0, 0};
 		double alpha = 1.2d;
 		int num_iter = 5000;
 		try {
