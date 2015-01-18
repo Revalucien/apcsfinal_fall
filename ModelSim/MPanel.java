@@ -70,7 +70,6 @@ public class MPanel extends Panel implements Runnable{
 		this.gfx = this.can.createGraphics();
 		this.gfx2D = (Graphics2D)this.gfx;
 		this.gfx2D.setFont(this.font);
-		this.cleanGFX();
 		super.validate();
 	}
 
@@ -78,21 +77,18 @@ public class MPanel extends Panel implements Runnable{
 	public void update (Graphics g) {
 		if (this.ctx.getInsets().top != 0) {
 			this.cleanGFX();
-			this.drawAxis();
 			this.drawBD();
+			this.drawAxis();
 			this.drawData();
 			this.paint(g);
+			this.isUpdating = false;			//everything has been drawn, stop rendering the graph
 		}
 	}
 
 	@Override
 	public void paint (Graphics g) {
-		//try {
-				//System.out.println("Paint called at: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()));
-				super.paint(g);
-				g.drawImage(this.can,0,this.ctx.getInsets().top,this);
-		//}
-		//catch (InterruptedException ie) {}
+		super.paint(g);
+		g.drawImage(this.can,0,this.ctx.getInsets().top,this);
 	}
 
 	public void drawAxis () {
@@ -159,23 +155,22 @@ public class MPanel extends Panel implements Runnable{
 		this.gfx2D.translate(0, (this.bounds.height - this.ctx.getInsets().top));
 		this.gfx2D.scale(1,-1);
 		this.gfx2D.translate(75,75);
-		for (int i = 0; i < 5000; i++) {
-			this.gfx2D.setStroke(new BasicStroke(3));
-			this.gfx2D.setColor(this.ONE_BDRM);
-			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 1)))/100000)));
-			this.gfx2D.setColor(this.TWO_BDRM);
-			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 2)))/100000)));
-			this.gfx2D.setColor(this.THREE_BDRM);
-			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 3)))/100000)));
-			this.gfx2D.setColor(this.FOUR_BDRM);
-			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 4)))/100000)));
-			this.gfx2D.setColor(this.FIVE_BDRM);
-			this.drawPoint((int)((this.X_LEN/5)*((double)i/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)i, 5)))/100000)));
-		}
+		this.gfx2D.setStroke(new BasicStroke(3));
+		this.gfx2D.setColor(this.ONE_BDRM);
+		this.gfx2D.drawLine((int)((this.X_LEN/5)*((double)0/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)0, 1)))/100000)),(int)((this.X_LEN/5)*((double)5000/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)5000, 1)))/100000)));
+		this.gfx2D.setColor(this.TWO_BDRM);
+		this.gfx2D.drawLine((int)((this.X_LEN/5)*((double)0/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)0, 2)))/100000)),(int)((this.X_LEN/5)*((double)5000/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)5000, 2)))/100000)));
+		this.gfx2D.setColor(this.THREE_BDRM);
+		this.gfx2D.drawLine((int)((this.X_LEN/5)*((double)0/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)0, 3)))/100000)),(int)((this.X_LEN/5)*((double)5000/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)5000, 3)))/100000)));
+		this.gfx2D.setColor(this.FOUR_BDRM);
+		this.gfx2D.drawLine((int)((this.X_LEN/5)*((double)0/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)0, 4)))/100000)),(int)((this.X_LEN/5)*((double)5000/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)5000, 4)))/100000)));
+		this.gfx2D.setColor(this.FIVE_BDRM);
+		this.gfx2D.drawLine((int)((this.X_LEN/5)*((double)0/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)0, 5)))/100000)),(int)((this.X_LEN/5)*((double)5000/1000)), (int)((this.Y_LEN/7)*(((this.win.computePrice((double)5000, 5)))/100000)));
 		this.gfx2D.setColor(Color.black);
 		this.gfx2D.translate(-75,-75);
 		this.gfx2D.scale(1,-1);
 		this.gfx2D.translate(0, -(this.bounds.height - this.ctx.getInsets().top));
+		this.gfx2D.setStroke(new BasicStroke(2));
 	}
 
 	public void drawData () {		//plot points based on price and number of square feet
