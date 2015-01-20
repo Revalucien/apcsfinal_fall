@@ -1,4 +1,6 @@
 #!/bin/sh
 rm -rf ./*.class
-javac Main.java
-java Main
+rm ModelSim.jar
+javac ./*.java
+jar -cfe ModelSim.jar Main ./*.class
+java -jar ModelSim.jar
