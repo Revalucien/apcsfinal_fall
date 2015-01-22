@@ -75,7 +75,7 @@ public class MPanel extends Panel implements Runnable{
 
 	@Override
 	public void update (Graphics g) {
-		if (this.ctx.getInsets().top != 0) {
+		if ((this.ctx.getInsets().top != 0) || (System.getProperty("java.runtime.name").equals(new String("OpenJDK Runtime Environment")))) {
 			this.cleanGFX();
 			this.drawBD();
 			this.drawAxis();
