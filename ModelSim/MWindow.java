@@ -48,6 +48,9 @@ public class MWindow {
 	        public void windowClosed(WindowEvent e) {}
 		});
 		this.computeGradientDescent(1650, 3);
+		(new Thread(this.pan = new MPanel(this.wframe, this.housing_origin, this.price, this))).start();
+		this.wframe.add(this.pan);
+		this.wframe.validate();
  		this.wframe.setVisible(true);
 	}
 
@@ -192,8 +195,5 @@ public class MWindow {
 		//double new_price = (1 * theta[0]) + (((1650 - mu[0])/sigma[0]) * theta[1]) + (((3 - mu[1]) / sigma[1]) * theta[2]);
 		double new_price = (1 * theta[0]) + (((p - mu[0])/sigma[0]) * theta[1]) + (((q - mu[1]) / sigma[1]) * theta[2]);
 		System.out.println("Price of a 1650 sqft house with 3 bedrooms is $" + new_price);
-		(new Thread(this.pan = new MPanel(this.wframe, this.housing_origin, this.price, this))).start();
-		this.wframe.add(this.pan);
-		this.wframe.validate();
 	}
 }
